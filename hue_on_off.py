@@ -30,7 +30,4 @@ for object_path in object_paths:
     on_off_handle.WriteValue((dbus.Array([dbus.Byte(state)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
     x = on_off_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
     print("int: %s" % [int(y) for y in x])
-   # print("str: %s" % [str(y) for y in x])
-   # print("hex: %s" % [hex(y) for y in x])
-   # print("hex: %#0.2x" % 14)
-
+   
