@@ -29,5 +29,6 @@ for object_path in object_paths:
 
     on_off_handle.WriteValue((dbus.Array([dbus.Byte(state)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
     x = on_off_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
-    print("int: %s" % [int(y) for y in x])
+    print(x)
+    print("%s" % [int(v) for v in x])
    
