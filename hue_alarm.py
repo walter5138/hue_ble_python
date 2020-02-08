@@ -3,7 +3,10 @@
 """Makes the Hue Lamp(s) ping or blink."""
 
 import dbus
-from settings import lamp_addresses
+from hue_config import lamp_addresses
+from hue_functions import connect
+
+connect(lamp_addresses)
 
 while True:
     x = input("You can make the lamps (p)ing once or (b)link 15 times and (s)top blinking while blinking : ")
