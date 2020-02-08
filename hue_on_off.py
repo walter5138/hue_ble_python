@@ -3,7 +3,10 @@
 """Switches Hue Lamp(s) on or off."""
 
 import dbus
-from settings import lamp_addresses
+from hue_config import lamp_addresses
+from hue_functions import connect
+
+connect(lamp_addresses)
 
 while True:
     x = input("on/off : ")
