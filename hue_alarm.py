@@ -9,7 +9,7 @@ from hue_functions import connect
 connect(lamp_addresses)
 
 while True:
-    x = input("You can make the lamps (p)ing once or (b)link 15 times and (s)top blinking while blinking : ")
+    x = str(input("You can make the lamps (p)ing once or (b)link 15 times and (s)top blinking while blinking : "))
     if x == 'p':
         state = 1
         break
