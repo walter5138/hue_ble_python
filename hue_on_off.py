@@ -9,7 +9,7 @@ from hue_functions import connect
 connect(lamp_addresses)
 
 while True:
-    x = input("on/off : ")
+    x = str(input("on/off : "))
     if x == 'on':
         state = 1
         break
@@ -32,6 +32,5 @@ for object_path in object_paths:
 
     on_off_handle.WriteValue((dbus.Array([dbus.Byte(state)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
     x = on_off_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
-    print(x)
-    print("%s" % [int(v) for v in x])
+    print("Lamp %s is on : %s" % (object_path, [bool(v) for v in x]))
    
