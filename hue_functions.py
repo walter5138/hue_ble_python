@@ -1,26 +1,34 @@
 #!/usr/bin/env python3
 
-import dbus
+def connect_lamp(lamp_address):
+     import dbus
+     systembus = dbus.SystemBus()
+     destination = ('org.bluez')
+     interface = ('org.bluez.Device1')
+     objectpath = ("/org/bluez/hci0/dev_" + lamp_address)
+     object = systembus.get_object(destination, objectpath)
+     connection_handle = dbus.Interface(object, interface)
+     connection_handle.Connect()
 
-def connect(lamp_addresses):
 
+def get_connection_status(lamp_address):
+    import dbus
     systembus = dbus.SystemBus()
-
     destination = ('org.bluez')
-    interface = ('org.bluez.Device1')
-    object_paths = lamp_addresses
-
-    for object_path in object_paths:
-        objectpath = ("/org/bluez/hci0/dev_" + object_path)
-       # print(objectpath)
-        object = systembus.get_object(destination, objectpath)
-       # print(object)
-        connection_handle = dbus.Interface(object, interface)
-       # print(connection_handle)
-
-        x = connection_handle.Connect()
-        print(x)
-       # x = connection_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
-       # print("%s" % [int(v) for v in x])
-
-
+    interface = ('org.freedesktop.DBus.Properties')
+    objectpath = ("/org/bluez/hci0/dev_" + lamp_address)
+    object = systembus.get_object(destination, objectpath)
+    connection_test_handle = dbus.Interface(object, interface)
+    x = connection_test_handle.Get((dbus.String("org.bluez.Device1")), (dbus.String("Connected")))
+    return (bool(x))
+       
+def connect(lamp_addresses):
+    for lamp_address in lamp_addresses:
+        status = get_connection_status(lamp_address)
+        if status == False:
+            print("Lamp " + lamp_address + " connecting")
+            connect_lamp(lamp_address)
+            status = get_connection_status(lamp_address)
+        if status == True:
+            print("Lamp " + lamp_address + " connected")
+            
