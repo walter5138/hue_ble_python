@@ -10,7 +10,6 @@ def connect_lamp(lamp_address):
      connection_handle = dbus.Interface(object, interface)
      connection_handle.Connect()
 
-
 def get_connection_status(lamp_address):
     import dbus
     systembus = dbus.SystemBus()
