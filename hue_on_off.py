@@ -5,6 +5,7 @@
 import dbus
 from hue_config import lamp_addresses
 from hue_functions import connect
+from termcolor import colored
 
 connect(lamp_addresses)
 
@@ -38,7 +39,7 @@ for object_path in object_paths:
                        # Convert the byte into bool: bool(). Result is True or False, stored in y.
 
     if y == False:
-        print("Lamp " + object_path + " is off.")
+        print("Lamp " + object_path + " is %s." % colored('off', 'red'))
     if y == True:
-        print("Lamp " + object_path + " is on.")
+        print("Lamp " + object_path + " is %s." % colored('on', 'green'))
         
