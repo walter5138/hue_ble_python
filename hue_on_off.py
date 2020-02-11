@@ -32,5 +32,13 @@ for object_path in object_paths:
 
     on_off_handle.WriteValue((dbus.Array([dbus.Byte(state)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
     x = on_off_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
-    print("Lamp %s is on : %s" % (object_path, [bool(v) for v in x]))
-   
+
+    y = bool(x[0])     # ReadValue returns a array of bytes now stored in the variable x.
+                       # There is only one item in the array, accessed with x[0].
+                       # Convert the byte into bool: bool(). Result is True or False, stored in y.
+
+    if y == False:
+        print("Lamp " + object_path + " is off.")
+    if y == True:
+        print("Lamp " + object_path + " is on.")
+        
