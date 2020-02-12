@@ -4,7 +4,7 @@
 
 import dbus
 from hue_config import lamp_addresses
-from hue_functions import connect, alert
+from hue_functions import connect, alert_set
 
 connect(lamp_addresses)
 
@@ -23,5 +23,5 @@ while True:
         print("Please just input (p)ing, (b)link or (s)top.")
     
 for lamp_address in lamp_addresses:
-    alert(lamp_address, state)
+    alert_set(lamp_address, state)
    

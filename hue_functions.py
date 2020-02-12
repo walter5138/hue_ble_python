@@ -61,7 +61,7 @@ def on_off_state(lamp_address):
     if state == True:
         print("Lamp " + lamp_address + " is %s." % colored('on', 'green'))
 
-def alert(lamp_address, state):
+def alert_set(lamp_address, state):
     import dbus
     systembus = dbus.SystemBus()
     destination = ('org.bluez')
