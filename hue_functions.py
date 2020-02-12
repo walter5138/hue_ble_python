@@ -70,3 +70,31 @@ def alert(lamp_address, state):
     object = systembus.get_object(destination, objectpath)
     alert_handle = dbus.Interface(object, interface)
     alert_handle.WriteValue((dbus.Array([dbus.Byte(state)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
+
+def brightness_set(lamp_address, bri):
+    import dbus
+    systembus = dbus.SystemBus()
+    destination = ('org.bluez')
+    interface = ('org.bluez.GattCharacteristic1')
+    objectpath = ("/org/bluez/hci0/dev_" + lamp_address + "/service0023/char0029")
+    object = systembus.get_object(destination, objectpath)
+    brightness_handle = dbus.Interface(object, interface)
+    brightness_handle.WriteValue((dbus.Array([dbus.Byte(bri)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
+ 
+def brightness_get(lamp_address):
+    import dbus
+    from termcolor import colored
+    systembus = dbus.SystemBus()
+    destination = ('org.bluez')
+    interface = ('org.bluez.GattCharacteristic1')
+    objectpath = ("/org/bluez/hci0/dev_" + lamp_address + "/service0023/char0029")
+    object = systembus.get_object(destination, objectpath)
+    brightness_state_handle = dbus.Interface(object, interface)
+    ay = brightness_state_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
+
+    state = int(ay[0])     # ReadValue returns an array of bytes now stored in the variable ay.
+                           # There is only one item in the array, accessed with ay[0].
+                           # Convert the byte into int: int(), now stored in state.
+
+    print("Lamp " + lamp_address + " has brightness %s." % colored(state, 'cyan'))
+

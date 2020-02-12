@@ -4,9 +4,12 @@
 
 import dbus
 from hue_config import lamp_addresses
-from hue_functions import connect
+from hue_functions import connect, brightness_set, brightness_get
 
 connect(lamp_addresses)
+
+for lamp_address in lamp_addresses:
+    brightness_get(lamp_address)
 
 while True:
     x = input("Please input brightness from 1 to 254 : ")
@@ -20,16 +23,9 @@ while True:
     except ValueError:
         print('"%s" is not a number. Try again.' % x)
 
-systembus = dbus.SystemBus()
+for lamp_address in lamp_addresses:
+    brightness_set(lamp_address, bri)
 
-destination = ('org.bluez')
-interface = ('org.bluez.GattCharacteristic1')
-object_paths = lamp_addresses
-
-for object_path in object_paths:
-    objectpath = ("/org/bluez/hci0/dev_" + object_path + "/service0023/char0029")
-    object = systembus.get_object(destination, objectpath)
-    brighness_handle = dbus.Interface(object, interface)
-
-    brighness_handle.WriteValue((dbus.Array([dbus.Byte(bri)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
+for lamp_address in lamp_addresses:
+    brightness_get(lamp_address)
 
