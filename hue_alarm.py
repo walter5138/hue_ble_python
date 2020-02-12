@@ -4,12 +4,12 @@
 
 import dbus
 from hue_config import lamp_addresses
-from hue_functions import connect
+from hue_functions import connect, alert
 
 connect(lamp_addresses)
 
 while True:
-    x = str(input("You can make the lamps (p)ing once or (b)link 15 times and (s)top blinking while blinking : "))
+    x = input("You can make the lamps (p)ing once or (b)link 15 times and (s)top blinking while blinking : ")
     if x == 'p':
         state = 1
         break
@@ -21,17 +21,7 @@ while True:
         break
     else:
         print("Please just input (p)ing, (b)link or (s)top.")
-
-systembus = dbus.SystemBus()
-
-destination = ('org.bluez')
-interface = ('org.bluez.GattCharacteristic1')
-object_paths = lamp_addresses
-
-for object_path in object_paths:
-    objectpath = ("/org/bluez/hci0/dev_" + object_path + "/service0023/char0032")
-    object = systembus.get_object(destination, objectpath)
-    alarm_handle = dbus.Interface(object, interface)
-
-    alarm_handle.WriteValue((dbus.Array([dbus.Byte(state)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
+    
+for lamp_address in lamp_addresses:
+    alert(lamp_address, state)
    
