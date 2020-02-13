@@ -72,6 +72,30 @@ class HueLamp:
                                # There is only one item in the array, accessed with ay[0].
                                # Convert the byte into bool: bool(). Result is True or False.
 
+    def mired_set(self, mired):
+        import dbus
+        systembus = dbus.SystemBus()
+        destination = ('org.bluez')
+        interface = ('org.bluez.GattCharacteristic1')
+        objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char002c")
+        object = systembus.get_object(destination, objectpath)
+        mired_set_handle = dbus.Interface(object, interface)
+        mired_get_handle.WriteValue((dbus.Array([dbus.Byte(mired)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
+
+    def mired_get(self):
+        import dbus
+        systembus = dbus.SystemBus()
+        destination = ('org.bluez')
+        interface = ('org.bluez.GattCharacteristic1')
+        objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char002c")
+        object = systembus.get_object(destination, objectpath)
+        mired_get_handle = dbus.Interface(object, interface)
+        ay = mired_get_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
+        return int(ay[0])     # ReadValue returns an array of bytes now stored in the variable ay.
+                              # There is only one item in the array, accessed with ay[0].
+                              # Convert the byte into bool: bool(). Result is True or False.
+
+
 
 
 
