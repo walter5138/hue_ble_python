@@ -29,7 +29,11 @@ def connect(lamp_addresses):
             print('Lamp ' + lamp_address + colored(' connecting ', 'yellow', attrs=['blink']), end='\r')
             connect_lamp(lamp_address)
             status = connection_state(lamp_address)
-        if state == True:
+            if status == True:
+                print('Lamp ' + lamp_address + colored(' connected  ' , 'green'))
+            else:
+                print('Lamp ' + lamp_address + colored(' connection ERROR!  ' , 'red', attrs=['blink']))
+        elif state == True:
             print('Lamp ' + lamp_address + colored(' connected  ' , 'green'))
             
 def on_off_switch(lamp_address, switch):
@@ -58,7 +62,7 @@ def on_off_state(lamp_address):
                             # Convert the byte into bool: bool(). Result is True or False, stored in state.
     if state == False:
         print("Lamp " + lamp_address + " is %s." % colored('off', 'red'))
-    if state == True:
+    elif state == True:
         print("Lamp " + lamp_address + " is %s." % colored('on', 'green'))
 
 def alert(lamp_address, state):
