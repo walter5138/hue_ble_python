@@ -4,9 +4,10 @@ class HueLamp:
 
     def __init__(self, address, name="Hue_Lamp"):
         self.address = address
+        self.connect()
         self.set_name(name)
         self.name = self.get_name()
-        print('%s = %s' % (address, name))
+        print('%s = %s, connection state: %s' % (address, name, self.connection_state()))
 
     def connection_state(self):
         import dbus
@@ -103,8 +104,63 @@ class HueLamp:
 
         return int(x, 16)                                   # Please comment!!!!!!!!!!!!!!!!!!!
                         
+    def alert_set(self, state):
+        import dbus
+        systembus = dbus.SystemBus()
+        destination = ('org.bluez')
+        interface = ('org.bluez.GattCharacteristic1')
+        objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char0032")
+        object = systembus.get_object(destination, objectpath)
+        alert_handle = dbus.Interface(object, interface)
+        alert_handle.WriteValue([state], [])
                        
+    def brightness_get(self):
+        import dbus
+        systembus = dbus.SystemBus()
+        destination = ('org.bluez')
+        interface = ('org.bluez.GattCharacteristic1')
+        objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char0029")
+        object = systembus.get_object(destination, objectpath)
+        brightness_state_handle = dbus.Interface(object, interface)
+        ay = brightness_state_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
 
+        return int(ay[0])     # ReadValue returns an array of bytes now stored in the variable ay.
+                              # There is only one item in the array, accessed with ay[0].
+                              # Convert the byte into int: int().
+
+    def brightness_set(self, bri):
+        import dbus
+        systembus = dbus.SystemBus()
+        destination = ('org.bluez')
+        interface = ('org.bluez.GattCharacteristic1')
+        objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char0029")
+        object = systembus.get_object(destination, objectpath)
+        brightness_handle = dbus.Interface(object, interface)
+        brightness_handle.WriteValue([bri], [])
+
+    def transitiontime_get(self):
+        import dbus
+        systembus = dbus.SystemBus()
+        destination = ('org.bluez')
+        interface = ('org.bluez.GattCharacteristic1')
+        objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char0037")
+        object = systembus.get_object(destination, objectpath)
+        transitiontime_state_handle = dbus.Interface(object, interface)
+        ay = transitiontime_state_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
+
+        return float(ay[0] * 0.1)     # ReadValue returns an array of bytes now stored in the variable ay.
+                              # There is only one item in the array, accessed with ay[0].
+                              # Convert the byte into int: int().
+
+    def transitiontime_set(self, trans):
+        import dbus
+        systembus = dbus.SystemBus()
+        destination = ('org.bluez')
+        interface = ('org.bluez.GattCharacteristic1')
+        objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char0037")
+        object = systembus.get_object(destination, objectpath)
+        transitiontime_handle = dbus.Interface(object, interface)
+        transitiontime_handle.WriteValue([trans, 0], [])
 
 
 
