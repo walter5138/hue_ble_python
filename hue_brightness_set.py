@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 """Sets the brightness of the Hue Lamp(s)."""
+
 import time
 from hue_class import HueLamp
 from termcolor import colored

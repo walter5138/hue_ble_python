@@ -73,9 +73,10 @@ class HueLamp:
         on_off_handle = dbus.Interface(object, interface)
         ay = on_off_handle.ReadValue([])
 
-        return bool(ay[0])     # ReadValue returns an array of bytes now stored in the variable ay.
-                               # There is only one item in the array, accessed with ay[0].
-                               # Convert the byte into bool: bool(). Result is True or False.
+        if ay[0] == 0:        # ReadValue returns an array of bytes now stored in the variable ay.
+            return "off"      # There is only one item in the array, accessed with ay[0].  
+        elif ay[0] == 1:
+            return "on"
 
     def mired_set(self, mired):
         import dbus
