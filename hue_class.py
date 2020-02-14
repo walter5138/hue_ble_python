@@ -2,8 +2,11 @@
 
 class HueLamp:
 
-    def __init__(self, address):
+    def __init__(self, address, name="Hue_Lamp"):
         self.address = address
+        self.set_name(name)
+        self.name = self.get_name()
+        print('%s = %s' % (address, name))
 
     def connection_state(self):
         import dbus
@@ -34,10 +37,10 @@ class HueLamp:
         objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0011/char0014")
         object = systembus.get_object(destination, objectpath)
         get_name_handle = dbus.Interface(object, interface)
-        x = get_name_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
+        x = get_name_handle.ReadValue([])
         return ''.join([str(v) for v in x])
 
-    def set_name(self):
+    def set_name(self, name):
         import dbus
         systembus = dbus.SystemBus()
         destination = ('org.bluez')
@@ -45,7 +48,8 @@ class HueLamp:
         objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0011/char0014")
         object = systembus.get_object(destination, objectpath)
         set_name_handle = dbus.Interface(object, interface)
-        set_name_handle.WriteValue((dbus.Array([dbus.Byte(119), dbus.Byte(97), dbus.Byte(108), dbus.Byte(116), dbus.Byte(101), dbus.Byte(114)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
+        ascii_list = [ord(c) for c in name]
+        set_name_handle.WriteValue((ascii_list), [])
 
     def on_off_switch(self, switch):
         import dbus
@@ -55,7 +59,7 @@ class HueLamp:
         objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char0026")
         object = systembus.get_object(destination, objectpath)
         on_off_handle = dbus.Interface(object, interface)
-        on_off_handle.WriteValue((dbus.Array([dbus.Byte(switch)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
+        on_off_handle.WriteValue([switch], [])
 
     def on_off_state(self):
         import dbus
@@ -66,7 +70,7 @@ class HueLamp:
         objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char0026")
         object = systembus.get_object(destination, objectpath)
         on_off_handle = dbus.Interface(object, interface)
-        ay = on_off_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
+        ay = on_off_handle.ReadValue([])
 
         return bool(ay[0])     # ReadValue returns an array of bytes now stored in the variable ay.
                                # There is only one item in the array, accessed with ay[0].
@@ -80,7 +84,10 @@ class HueLamp:
         objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char002c")
         object = systembus.get_object(destination, objectpath)
         mired_set_handle = dbus.Interface(object, interface)
-        mired_get_handle.WriteValue((dbus.Array([dbus.Byte(mired)], dbus.Signature('y'))), (dbus.Dictionary([], dbus.Signature('sv'))))
+
+        y = mired.to_bytes(2, 'little')                     # Please comment!!!!!!!!!!!!!!!!!!!
+
+        mired_set_handle.WriteValue([y[:1], y[1:]], [])     # Please comment!!!!!!!!!!!!!!!!!!!
 
     def mired_get(self):
         import dbus
@@ -90,10 +97,13 @@ class HueLamp:
         objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char002c")
         object = systembus.get_object(destination, objectpath)
         mired_get_handle = dbus.Interface(object, interface)
-        ay = mired_get_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
-        return int(ay[0])     # ReadValue returns an array of bytes now stored in the variable ay.
-                              # There is only one item in the array, accessed with ay[0].
-                              # Convert the byte into bool: bool(). Result is True or False.
+        ay = mired_get_handle.ReadValue([])
+
+        x = bytes(reversed(ay)).hex()                       # Please comment!!!!!!!!!!!!!!!!!!!
+
+        return int(x, 16)                                   # Please comment!!!!!!!!!!!!!!!!!!!
+                        
+                       
 
 
 
