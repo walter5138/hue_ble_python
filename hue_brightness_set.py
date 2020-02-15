@@ -57,7 +57,7 @@ while True:
     else:
         print("Please just input k, l, h or a.")
 
-time.sleep(0.5)   # if transitiontime is short values needs time to settle.
+time.sleep(0.5)   # if transitiontime is long values needs time to settle.
 
 print("Lamp %s has brightness %s." % (colored(hl_1.name, 'yellow'), colored(hl_1.brightness_get(), 'green')))
 print("Lamp %s has brightness %s." % (colored(hl_2.name, 'yellow'), colored(hl_2.brightness_get(), 'green')))

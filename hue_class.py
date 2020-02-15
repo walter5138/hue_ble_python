@@ -150,8 +150,10 @@ class HueLamp:
         ay = transitiontime_state_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
 
         return float(ay[0] * 0.1)     # ReadValue returns an array of bytes now stored in the variable ay.
-                              # There is only one item in the array, accessed with ay[0].
-                              # Convert the byte into int: int().
+                                      # There is only one item in the array, accessed with ay[0].
+                                      # Return value is in miliseconds. "* 0.1" converts it in seconds,
+                                      # so the return value is, for example, usable in "time.sleep(0.4)".
+                                      # Convert the byte into float: float().
 
     def transitiontime_set(self, trans):
         import dbus
