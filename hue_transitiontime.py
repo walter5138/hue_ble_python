@@ -16,9 +16,8 @@ print("Lamp %s has transitiontime %s." % (colored(hl_3.name, 'yellow'), colored(
 while True:
     x = input("Please input the transitiontime from 0 to 4 miliseconds : ")
     try:
-        y = int(x)
-        if y in range(0, 5):
-            trans = y
+        tra = int(x)
+        if tra in range(0, 5):
             break
         else:
             print("Value out of range.")
@@ -28,30 +27,30 @@ while True:
 while True:
     x = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
     if x == 'k':
-        hl_1.transitiontime_set(trans)
+        hl_1.transitiontime_set(tra)
         break
     elif x == 'kl' or x == 'lk':
-        hl_1.transitiontime_set(trans)
-        hl_2.transitiontime_set(trans)
+        hl_1.transitiontime_set(tra)
+        hl_2.transitiontime_set(tra)
         break
     elif x == 'l':
-        hl_2.transitiontime_set(trans)
+        hl_2.transitiontime_set(tra)
         break
     elif x == 'lh' or x == 'hl':
-        hl_2.transitiontime_set(trans)
-        hl_3.transitiontime_set(trans)
+        hl_2.transitiontime_set(tra)
+        hl_3.transitiontime_set(tra)
         break
     elif x == 'h':
-        hl_3.transitiontime_set(trans)
+        hl_3.transitiontime_set(tra)
         break
     elif x == 'hk' or x == 'kh':
-        hl_3.transitiontime_set(trans)
-        hl_1.transitiontime_set(trans)
+        hl_3.transitiontime_set(tra)
+        hl_1.transitiontime_set(tra)
         break
     elif x == 'a':
-        hl_1.transitiontime_set(trans)
-        hl_2.transitiontime_set(trans)
-        hl_3.transitiontime_set(trans)
+        hl_1.transitiontime_set(tra)
+        hl_2.transitiontime_set(tra)
+        hl_3.transitiontime_set(tra)
         break
     else:
         print("Please just input k, l, h or a.")
