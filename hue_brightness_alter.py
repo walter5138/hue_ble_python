@@ -3,6 +3,7 @@
 """Alters brightness of the Hue Lamp(s)."""
 
 import sys, termios, tty
+import math
 from hue_class import HueLamp
 from termcolor import colored
 
@@ -24,10 +25,17 @@ def get_key():
 
 def brightness_alter(*hl):
 
-    print("Please input [+/-/q]:")
-
     bri = 1
     already_send = "no"
+    bri_sum = 0
+
+    for lamp in hl:
+        print('The current brightness of lamp %s = %s.' % (colored(lamp.name, "yellow"), colored(lamp.brightness_get(), "green")))
+        bri_sum += lamp.brightness_get()
+    bri = int(math.floor(bri_sum / len(hl)))
+    print('\nThe average brightness of selected lamps = %s.' % (colored(bri, "cyan")))
+
+    print("\nPlease input [+/-/q]: \n")
 
     while True:
         key = get_key()
@@ -69,10 +77,12 @@ def brightness_alter(*hl):
         else:
             print("Please just use + or - or (q)uit.\n")
 
-print("\nAlter the lamp's brightness :")
+print("\n######  Alter the lamp's brightness  ######")
 
 while True:
-    x = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
+    x = input("\nWhere to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
+    print("\n")
+
     if x == 'k':
         brightness_alter(hl_1)
         break
