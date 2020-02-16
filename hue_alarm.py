@@ -10,7 +10,7 @@ hl_2 = HueLamp("EC_D6_5A_2D_93_CC", "livingroom")
 hl_3 = HueLamp("DF_CA_54_1B_39_A8", "homeoffice")
 
 while True:
-    x = input("You can make the lamps (p)ing once or (b)link 15 times and (s)top blinking while blinking : ")
+    x = input("\nYou can make the lamps (p)ing once or (b)link 15 times and (s)top blinking while blinking : ")
     if x == 'p':
         state = 1
         break
