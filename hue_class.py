@@ -2,11 +2,15 @@
 
 class HueLamp:
 
+    """HueLamp class representing and interact with Philips Bluetooth Hue Lamps."""
+
     def __init__(self, address, name="Hue_Lamp"):
+        #import time
         self.address = address
         self.connect()
-        self.set_name(name)
-        self.name = self.get_name()
+        #time.sleep(2)
+        self.name_set(name)
+        self.name = self.name_get()
         print('%s = %s, connection state: %s' % (address, name, self.connection_state()))
 
     def connection_state(self):
@@ -30,7 +34,7 @@ class HueLamp:
         connection_handle = dbus.Interface(object, interface)
         connection_handle.Connect()
 
-    def get_name(self):
+    def name_get(self):
         import dbus
         systembus = dbus.SystemBus()
         destination = ('org.bluez')
@@ -41,7 +45,7 @@ class HueLamp:
         x = get_name_handle.ReadValue([])
         return ''.join([str(v) for v in x])
 
-    def set_name(self, name):
+    def name_set(self, name):
         import dbus
         systembus = dbus.SystemBus()
         destination = ('org.bluez')

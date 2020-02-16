@@ -17,9 +17,8 @@ print("Lamp %s has mired %s." % (colored(hl_3.name, 'yellow'), colored(hl_3.mire
 while True:
     x = input("Please input color temerature in mired from 153 (cold light) to 500 (warm light) : ")
     try:
-        y = int(x)
-        if y in range(153, 501):
-            bri = y
+        bri = int(x)
+        if bri in range(153, 501):
             break
         else:
             print("Value out of range.")
@@ -29,48 +28,48 @@ while True:
 while True:
     x = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
     if x == 'k':
-        hl_1.mired_set(y)
+        hl_1.mired_set(bri)
         time.sleep(hl_1.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
         break
     elif x == 'kl' or x == 'lk':
-        hl_1.mired_set(y)
-        hl_2.mired_set(y)
+        hl_1.mired_set(bri)
+        hl_2.mired_set(bri)
         time.sleep(hl_1.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
         time.sleep(hl_2.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_2.name, 'yellow'), colored(hl_2.mired_get(), 'green'),  colored(hl_2.transitiontime_get(), 'green')))
         break
     elif x == 'l':
-        hl_2.mired_set(y)
+        hl_2.mired_set(bri)
         time.sleep(hl_2.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_2.name, 'yellow'), colored(hl_2.mired_get(), 'green'),  colored(hl_2.transitiontime_get(), 'green')))
         break
     elif x == 'lh' or x == 'hl':
-        hl_2.mired_set(y)
-        hl_3.mired_set(y)
+        hl_2.mired_set(bri)
+        hl_3.mired_set(bri)
         time.sleep(hl_2.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_2.name, 'yellow'), colored(hl_2.mired_get(), 'green'),  colored(hl_2.transitiontime_get(), 'green')))
         time.sleep(hl_3.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_3.name, 'yellow'), colored(hl_3.mired_get(), 'green'),  colored(hl_3.transitiontime_get(), 'green')))
         break
     elif x == 'h':
-        hl_3.mired_set(y)
+        hl_3.mired_set(bri)
         time.sleep(hl_3.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_3.name, 'yellow'), colored(hl_3.mired_get(), 'green'),  colored(hl_3.transitiontime_get(), 'green')))
         break
     elif x == 'hk' or x == 'kh':
-        hl_1.mired_set(y)
-        hl_3.mired_set(y)
+        hl_1.mired_set(bri)
+        hl_3.mired_set(bri)
         time.sleep(hl_1.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
         time.sleep(hl_3.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_3.name, 'yellow'), colored(hl_3.mired_get(), 'green'),  colored(hl_3.transitiontime_get(), 'green')))
         break
     elif x == 'a':
-        hl_1.mired_set(y)
-        hl_2.mired_set(y)
-        hl_3.mired_set(y)
+        hl_1.mired_set(bri)
+        hl_2.mired_set(bri)
+        hl_3.mired_set(bri)
         time.sleep(hl_1.transitiontime_get())   # if transitiontime is long values needs time to settle.
         print("Lamp %s got mired %s in %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
         time.sleep(hl_2.transitiontime_get())   # if transitiontime is long values needs time to settle.
