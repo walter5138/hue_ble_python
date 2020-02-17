@@ -34,8 +34,10 @@ def mired_alter(*hl):
     for lamp in hl:
         print('The current mired of lamp %s = %s.' % (colored(lamp.name, "yellow"), colored(lamp.mired_get(), "green")))
         mir_sum += lamp.mired_get()
+    print()
     mir = int(math.floor(mir_sum / len(hl)))
-    print('The average mired of selected lamps = %s.\n' % (colored(mir, "cyan")))
+
+    print('Changing mired of selected lamps start at their average of %s.\n' % (colored(mir, "cyan")))
 
     print("Please input [+/-/q]: ")
 

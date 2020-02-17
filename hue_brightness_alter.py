@@ -34,8 +34,10 @@ def brightness_alter(*hl):
     for lamp in hl:
         print('The current brightness of lamp %s = %s.' % (colored(lamp.name, "yellow"), colored(lamp.brightness_get(), "green")))
         bri_sum += lamp.brightness_get()
+    print()
     bri = int(math.floor(bri_sum / len(hl)))
-    print('The average brightness of selected lamps = %s.\n' % (colored(bri, "cyan")))
+
+    print('Changing brightness of selected lamps start at their average of %s.\n' % (colored(bri, "cyan")))
 
     print("Please input [+/-/q]: ")
 
