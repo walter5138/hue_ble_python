@@ -2,7 +2,9 @@
 
 """Alters brightness of the Hue Lamp(s)."""
 
-import sys, termios, tty
+import sys
+import termios
+import tty
 import math
 from hue_class import HueLamp
 from termcolor import colored
@@ -33,9 +35,9 @@ def brightness_alter(*hl):
         print('The current brightness of lamp %s = %s.' % (colored(lamp.name, "yellow"), colored(lamp.brightness_get(), "green")))
         bri_sum += lamp.brightness_get()
     bri = int(math.floor(bri_sum / len(hl)))
-    print('\nThe average brightness of selected lamps = %s.' % (colored(bri, "cyan")))
+    print('The average brightness of selected lamps = %s.\n' % (colored(bri, "cyan")))
 
-    print("\nPlease input [+/-/q]: \n")
+    print("Please input [+/-/q]: ")
 
     while True:
         key = get_key()
@@ -46,13 +48,13 @@ def brightness_alter(*hl):
                 bri = 254
                 print("%s = maximum brightness" % colored(bri, 'red'))
                 if already_send == "no":
-                    for x in hl:
-                        x.brightness_set(bri)
+                    for lamp in hl:
+                        lamp.brightness_set(bri)
                     already_send = "yes"    
             else:
                 print(colored(bri, 'green'))
-                for x in hl:
-                    x.brightness_set(bri)
+                for lamp in hl:
+                    lamp.brightness_set(bri)
                 already_send = "no"
                     
         elif key == "-":
@@ -61,49 +63,48 @@ def brightness_alter(*hl):
                 bri = 1
                 print("%s = minimum brightness" % colored(bri, 'red'))
                 if already_send == "no":
-                    for x in hl:
-                        x.brightness_set(bri)
+                    for lamp in hl:
+                        lamp.brightness_set(bri)
                     already_send = "yes"    
             else:
                 print(colored(bri, 'green'))
-                for x in hl:
-                    x.brightness_set(bri)
-                x.brightness_set(bri)
+                for lamp in hl:
+                    lamp.brightness_set(bri)
                 already_send = "no"
 
         elif key == "q":
             print("\nbye bye (;-)\n")
             break
         else:
-            print("Please just use + or - or (q)uit.\n")
+            print("Please just use + or - or (q)uit.")
 
-print("\n######  Alter the lamp's brightness  ######")
+print("\n######  Alter the lamp's brightness  ######\n")
 
 while True:
-    x = input("\nWhere to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
-    print("\n")
+    sel = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
+    print()
 
-    if x == 'k':
+    if sel == 'k':
         brightness_alter(hl_1)
         break
-    elif x == 'kl' or x == 'lk':
+    elif sel == 'kl' or sel == 'lk':
         brightness_alter(hl_1, hl_2)
         break
-    elif x == 'l':
+    elif sel == 'l':
         brightness_alter(hl_2)
         break
-    elif x == 'lh' or x == 'hl':
+    elif sel == 'lh' or sel == 'hl':
         brightness_alter(hl_2, hl_3)
         break
-    elif x == 'h':
+    elif sel == 'h':
         brightness_alter(hl_3)
         break
-    elif x == 'hk' or x == 'kh':
+    elif sel == 'hk' or sel == 'kh':
         brightness_alter(hl_3, hl_1)
         break
-    elif x == 'a':
+    elif sel == 'a':
         brightness_alter(hl_1, hl_2, hl_3)
         break
     else:
-        print("Please just input k, l, h or a.")
+        print("Please just input k, l, h or a.\n")
 

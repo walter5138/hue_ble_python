@@ -2,7 +2,10 @@
 
 """Alters the color temperature of the Hue Lamp(s)."""
 
-import sys, termios, tty
+import sys
+import termios
+import tty
+import math
 from hue_class import HueLamp
 from termcolor import colored
 
@@ -24,10 +27,17 @@ def get_key():
 
 def mired_alter(*hl):
 
-    print("Please input [+/-/q]:")
-
     mir = 153
     already_send = "no"
+    mir_sum = 0
+
+    for lamp in hl:
+        print('The current mired of lamp %s = %s.' % (colored(lamp.name, "yellow"), colored(lamp.mired_get(), "green")))
+        mir_sum += lamp.mired_get()
+    mir = int(math.floor(mir_sum / len(hl)))
+    print('The average mired of selected lamps = %s.\n' % (colored(mir, "cyan")))
+
+    print("Please input [+/-/q]: ")
 
     while True:
         key = get_key()
@@ -66,12 +76,13 @@ def mired_alter(*hl):
             print("\nbye bye (;-)\n")
             break
         else:
-            print("Please just use + or - or (q)uit.\n")
+            print("Please just use + or - or (q)uit.")
 
-print("\nAlter the lamp's brightness :")
+print("\n######  Alter the lamp's mired  ######\n")
 
 while True:
     x = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
+    print()
     if x == 'k':
         mired_alter(hl_1)
         break
@@ -94,5 +105,5 @@ while True:
         mired_alter(hl_1, hl_2, hl_3)
         break
     else:
-        print("Please just input k, l, h or a.")
+        print("Please just input k, l, h or a.\n")
 

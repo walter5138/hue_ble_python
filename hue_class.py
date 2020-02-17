@@ -31,8 +31,8 @@ class HueLamp:
         interface = ('org.bluez.Device1')
         objectpath = ('/org/bluez/hci0/dev_' + self.address)
         object = systembus.get_object(destination, objectpath)
-        connection_handle = dbus.Interface(object, interface)
-        connection_handle.Connect()
+        connect_handle = dbus.Interface(object, interface)
+        connect_handle.Connect()
 
     def name_get(self):
         import dbus
