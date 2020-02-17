@@ -53,8 +53,10 @@ class HueLamp:
         objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0011/char0014")
         object = systembus.get_object(destination, objectpath)
         set_name_handle = dbus.Interface(object, interface)
-        ascii_list = [ord(c) for c in name]
-        set_name_handle.WriteValue((ascii_list), [])
+        
+        ascii_list = [ord(c) for c in name]                 # to be commented
+
+        set_name_handle.WriteValue(ascii_list, [])
 
     def on_off_switch(self, switch):
         import dbus
@@ -91,9 +93,9 @@ class HueLamp:
         object = systembus.get_object(destination, objectpath)
         mired_set_handle = dbus.Interface(object, interface)
 
-        y = mired.to_bytes(2, 'little')                     # Please comment!!!!!!!!!!!!!!!!!!!
+        y = mired.to_bytes(2, 'little')                     # to be commented
 
-        mired_set_handle.WriteValue([y[:1], y[1:]], [])     # Please comment!!!!!!!!!!!!!!!!!!!
+        mired_set_handle.WriteValue([y[:1], y[1:]], [])     # to be commented
 
     def mired_get(self):
         import dbus
@@ -105,9 +107,9 @@ class HueLamp:
         mired_get_handle = dbus.Interface(object, interface)
         ay = mired_get_handle.ReadValue([])
 
-        x = bytes(reversed(ay)).hex()                       # Please comment!!!!!!!!!!!!!!!!!!!
+        x = bytes(reversed(ay)).hex()                       # to be commented
 
-        return int(x, 16)                                   # Please comment!!!!!!!!!!!!!!!!!!!
+        return int(x, 16)                                   # to be commented
                         
     def alert_set(self, state):
         import dbus
@@ -154,11 +156,10 @@ class HueLamp:
         ay = transitiontime_state_handle.ReadValue(dbus.Dictionary([], dbus.Signature('sv')))
 
         return round(float(ay[0] * 0.1), 1)     # ReadValue returns an array of bytes now stored in the variable ay.
-        #return float("{0:.2f}".format(ay[0] * 0.1))
-                                      # There is only one item in the array, accessed with ay[0].
-                                      # Return value is in miliseconds. "* 0.1" converts it in seconds,
-                                      # so the return value is, for example, usable in "time.sleep(0.4)".
-                                      # Convert the byte into float: float().
+                                                # There is only one item in the array, accessed with ay[0].
+                                                # Return value is in miliseconds. "* 0.1" converts it in seconds,
+                                                # so the return value is, for example, usable in "time.sleep(0.4)".
+                                                # Convert the byte into float: float().
 
     def transitiontime_set(self, trans):
         import dbus
@@ -170,6 +171,27 @@ class HueLamp:
         transitiontime_handle = dbus.Interface(object, interface)
         transitiontime_handle.WriteValue([trans, 0], [])
 
+    def color_get(self):
+        import dbus
+        systembus = dbus.SystemBus()
+        destination = ('org.bluez')
+        interface = ('org.bluez.GattCharacteristic1')
+        objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char002f")
+        object = systembus.get_object(destination, objectpath)
+        transitiontime_handle = dbus.Interface(object, interface)
+        col = transitiontime_handle.ReadValue([])
+
+        return [int(z) for z in col]
+
+    def color_set(self, col):
+        import dbus
+        systembus = dbus.SystemBus()
+        destination = ('org.bluez')
+        interface = ('org.bluez.GattCharacteristic1')
+        objectpath = ("/org/bluez/hci0/dev_" + self.address + "/service0023/char002f")
+        object = systembus.get_object(destination, objectpath)
+        transitiontime_handle = dbus.Interface(object, interface)
+        transitiontime_handle.WriteValue(col, [])                   # to be commented
 
 
 
