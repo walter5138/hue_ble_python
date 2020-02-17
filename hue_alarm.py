@@ -3,14 +3,16 @@
 """Makes the Hue Lamp(s) ping or blink."""
 
 from hue_class import HueLamp
-from termcolor import colored
 
 hl_1 = HueLamp("F6_0A_34_1A_BC_6F", "kitchen   ")
 hl_2 = HueLamp("EC_D6_5A_2D_93_CC", "livingroom")
 hl_3 = HueLamp("DF_CA_54_1B_39_A8", "homeoffice")
 
+print("\n######  Makes the Hue Lamp(s) ping or blink.  ######\n") 
+
 while True:
-    x = input("\nYou can make the lamps (p)ing once or (b)link 15 times and (s)top blinking while blinking : ")
+    x = input("You can make the lamps (p)ing once or (b)link 15 times and (s)top blinking while blinking : ")
+    print()
     if x == 'p':
         state = 1
         break
@@ -21,10 +23,11 @@ while True:
         state = 0
         break
     else:
-        print("Please just input (p)ing, (b)link or (s)top.")
+        print("Please just input (p)ing, (b)link or (s)top.\n")
     
 while True:
     x = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
+    print()
     if x == 'k':
         hl_1.alert_set(state)
         break
@@ -52,5 +55,5 @@ while True:
         hl_3.alert_set(state)
         break
     else:
-        print("Please just input k, l, h or a.")
+        print("Please just input k, l, h or a.\n")
    
