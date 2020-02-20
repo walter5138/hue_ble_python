@@ -24,7 +24,7 @@ my_colors = (red, yellow, green, cyan, blue, magenta)
 it = 0
 pos = 0
 t = 2
-while it < 2:
+while it < 200:
     print("loop number %s." % it)
     pos = 0
     while pos <= 5:
