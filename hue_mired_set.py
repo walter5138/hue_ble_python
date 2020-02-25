@@ -2,87 +2,69 @@
 
 """Sets the mired of the Hue Lamp(s)."""
 
-import time
-from hue_class import HueLamp
 from termcolor import colored
+from hue_class import HueLamp
+from hue_config import lamp_dict
 
-hl_1 = HueLamp("F6_0A_34_1A_BC_6F", "kitchen   ")
-hl_2 = HueLamp("EC_D6_5A_2D_93_CC", "livingroom")
-hl_3 = HueLamp("DF_CA_54_1B_39_A8", "homeoffice")
+for a, n in lamp_dict.items():
+    globals()[n] = HueLamp(a, n)
 
 print("\n######  Sets the mired of the Hue Lamp(s).  ######\n")
 
-print("Lamp %s has mired %s." % (colored(hl_1.name, 'yellow'), colored(hl_1.mired_get(), 'green')))
-print("Lamp %s has mired %s." % (colored(hl_2.name, 'yellow'), colored(hl_2.mired_get(), 'green')))
-print("Lamp %s has mired %s." % (colored(hl_3.name, 'yellow'), colored(hl_3.mired_get(), 'green')))
+for lamp in lamp_dict.values():
+    hl_obj = globals()[lamp]
+    print("Lamp %s has mired %s." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.mired_get(), 'green')))
+
 print()
 
 while True:
     x = input("Please input color temerature in mired from 153 (cold light) to 500 (warm light) : ")
     print()
     try:
-        bri = int(x)
-        if bri in range(153, 501):
+        mir = int(x)
+        if mir in range(153, 501):
             break
         else:
             print("Value out of range.\n")
     except ValueError:
         print('"%s" is not a number. Try again.\n' % x)
 
+s = "Where to send ? "
+for name in lamp_dict.values():
+    y = name[5:]
+    s = s + "%s " % y.replace(y[0], "(%s)" % y[0], 1)
+if len(lamp_dict) > 1:
+    s = s + "or (a)ll : "
+else:
+    s = s + " : "
+
 while True:
-    x = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
+    kbd_inp = input(s)
     print()
-    if x == 'k':
-        hl_1.mired_set(bri)
-        time.sleep(hl_1.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
+    first_letter_list = [y[5] for y in lamp_dict.values()]
+    if kbd_inp in first_letter_list:
+        k = [y for y in lamp_dict.values() if kbd_inp == y[5]]
+        globals()[k[0]].mired_set(mir)
+        #print("Lamp %s got mired %s in %s seconds." % (colored(hl_obj.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
         break
-    elif x == 'kl' or x == 'lk':
-        hl_1.mired_set(bri)
-        hl_2.mired_set(bri)
-        time.sleep(hl_1.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
-        time.sleep(hl_2.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_2.name, 'yellow'), colored(hl_2.mired_get(), 'green'),  colored(hl_2.transitiontime_get(), 'green')))
-        break
-    elif x == 'l':
-        hl_2.mired_set(bri)
-        time.sleep(hl_2.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_2.name, 'yellow'), colored(hl_2.mired_get(), 'green'),  colored(hl_2.transitiontime_get(), 'green')))
-        break
-    elif x == 'lh' or x == 'hl':
-        hl_2.mired_set(bri)
-        hl_3.mired_set(bri)
-        time.sleep(hl_2.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_2.name, 'yellow'), colored(hl_2.mired_get(), 'green'),  colored(hl_2.transitiontime_get(), 'green')))
-        time.sleep(hl_3.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_3.name, 'yellow'), colored(hl_3.mired_get(), 'green'),  colored(hl_3.transitiontime_get(), 'green')))
-        break
-    elif x == 'h':
-        hl_3.mired_set(bri)
-        time.sleep(hl_3.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_3.name, 'yellow'), colored(hl_3.mired_get(), 'green'),  colored(hl_3.transitiontime_get(), 'green')))
-        break
-    elif x == 'hk' or x == 'kh':
-        hl_1.mired_set(bri)
-        hl_3.mired_set(bri)
-        time.sleep(hl_1.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
-        time.sleep(hl_3.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_3.name, 'yellow'), colored(hl_3.mired_get(), 'green'),  colored(hl_3.transitiontime_get(), 'green')))
-        break
-    elif x == 'a':
-        hl_1.mired_set(bri)
-        hl_2.mired_set(bri)
-        hl_3.mired_set(bri)
-        time.sleep(hl_1.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
-        time.sleep(hl_2.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_2.name, 'yellow'), colored(hl_2.mired_get(), 'green'),  colored(hl_2.transitiontime_get(), 'green')))
-        time.sleep(hl_3.transitiontime_get())   # if transitiontime is long values needs time to settle.
-        print("Lamp %s got mired %s in %s seconds." % (colored(hl_3.name, 'yellow'), colored(hl_3.mired_get(), 'green'),  colored(hl_3.transitiontime_get(), 'green')))
+    elif kbd_inp == "a":
+        for lamp in lamp_dict.values():
+            globals()[lamp].mired_set(mir)
         break
     else:
-        print("Please just input k, l, h or a.\n")
+        s = "Please just input "
+        for name in lamp_dict.values():
+            s = s + "(%s) " % name[5]
+        if len(lamp_dict) > 1:
+            s = s + "or (a) : "
+        else:
+            s = s + " : "
+
+for lamp in lamp_dict.values():
+    hl_obj = globals()[lamp]
+    print("Lamp %s has mired %s." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.mired_get(), 'green')))
+
+    hl_obj.prop_chg_notify.kill()
+
 print()
 

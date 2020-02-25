@@ -6,12 +6,12 @@ import sys
 import termios
 import tty
 import math
-from hue_class import HueLamp
 from termcolor import colored
+from hue_class import HueLamp
+from hue_config import lamp_dict
 
-hl_1 = HueLamp("F6_0A_34_1A_BC_6F", "kitchen   ")
-hl_2 = HueLamp("EC_D6_5A_2D_93_CC", "livingroom")
-hl_3 = HueLamp("DF_CA_54_1B_39_A8", "homeoffice")
+for a, n in lamp_dict.items():
+    globals()[n] = HueLamp(a, n)
 
 def get_key():
     """Function to get keyboard key without enter."""
@@ -25,15 +25,16 @@ def get_key():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return key
 
-def mired_alter(*hl):
+def mired_alter(hl):
 
     mir = 153
     already_send = "no"
     mir_sum = 0
 
     for lamp in hl:
-        print('The current mired of lamp %s = %s.' % (colored(lamp.name, "yellow"), colored(lamp.mired_get(), "green")))
-        mir_sum += lamp.mired_get()
+        hl_obj = globals()[lamp]
+        print('The current mired of lamp %s = %s.' % (colored(hl_obj.name, "yellow"), colored(hl_obj.mired_get(), "green")))
+        mir_sum += hl_obj.mired_get()
     print()
     mir = int(math.floor(mir_sum / len(hl)))
 
@@ -47,16 +48,18 @@ def mired_alter(*hl):
         if key == "+":
             mir += 10 
             if mir >= 500:
-                mir= 500
+                mir = 500
                 print("%s = maximum mired" % colored(mir, 'red'))
                 if already_send == "no":
-                    for x in hl:
-                        x.mired_set(mir)
+                    for lamp in hl:
+                        hl_obj = globals()[lamp]
+                        hl_obj.mired_set(mir)
                     already_send = "yes"    
             else:
                 print(colored(mir, 'green'))
-                for x in hl:
-                    x.mired_set(mir)
+                for lamp in hl:
+                    hl_obj = globals()[lamp]
+                    hl_obj.mired_set(mir)
                 already_send = "no"
                     
         elif key == "-":
@@ -65,13 +68,15 @@ def mired_alter(*hl):
                 mir = 153
                 print("%s = minimum mired" % colored(mir, 'red'))
                 if already_send == "no":
-                    for x in hl:
-                        x.mired_set(mir)
+                    for lamp in hl:
+                        hl_obj = globals()[lamp]
+                        hl_obj.mired_set(mir)
                     already_send = "yes"    
             else:
                 print(colored(mir, 'green'))
-                for x in hl:
-                    x.mired_set(mir)
+                for lamp in hl:
+                    hl_obj = globals()[lamp]
+                    hl_obj.mired_set(mir)
                 already_send = "no"
 
         elif key == "q":
@@ -82,30 +87,39 @@ def mired_alter(*hl):
 
 print("\n######  Alter the lamp's mired  ######\n")
 
+s = "Where to send ? "
+for name in lamp_dict.values():
+    y = name[5:]
+    s = s + "%s " % y.replace(y[0], "(%s)" % y[0], 1)
+if len(lamp_dict) > 1:
+    s = s + "or (a)ll : "
+else:
+    s = s + " : "
+
 while True:
-    x = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
+    kbd_inp = input(s)
     print()
-    if x == 'k':
-        mired_alter(hl_1)
+    first_letter_list = [y[5] for y in lamp_dict.values()]
+    if kbd_inp in first_letter_list:
+        k = [y for y in lamp_dict.values() if kbd_inp == y[5]]
+        mired_alter(k)
         break
-    elif x == 'kl' or x == 'lk':
-        mired_alter(hl_1, hl_2)
-        break
-    elif x == 'l':
-        mired_alter(hl_2)
-        break
-    elif x == 'lh' or x == 'hl':
-        mired_alter(hl_2, hl_3)
-        break
-    elif x == 'h':
-        mired_alter(hl_3)
-        break
-    elif x == 'hk' or x == 'kh':
-        mired_alter(hl_3, hl_1)
-        break
-    elif x == 'a':
-        mired_alter(hl_1, hl_2, hl_3)
+    elif kbd_inp == "a":
+        mired_alter([y for y in lamp_dict.values()])
         break
     else:
-        print("Please just input k, l, h or a.\n")
+        s = "Please just input "
+        for name in lamp_dict.values():
+            s = s + "(%s) " % name[5]
+        if len(lamp_dict) > 1:
+            s = s + "or (a) : "
+        else:
+            s = s + " : "
+
+for lamp in lamp_dict.values():
+    hl_obj = globals()[lamp]
+
+    hl_obj.prop_chg_notify.kill()
+
+
 

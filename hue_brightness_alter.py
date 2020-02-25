@@ -6,15 +6,15 @@ import sys
 import termios
 import tty
 import math
-from hue_class import HueLamp
 from termcolor import colored
+from hue_class import HueLamp
+from hue_config import lamp_dict
 
-hl_1 = HueLamp("F6_0A_34_1A_BC_6F", "kitchen   ")
-hl_2 = HueLamp("EC_D6_5A_2D_93_CC", "livingroom")
-hl_3 = HueLamp("DF_CA_54_1B_39_A8", "homeoffice")
+for a, n in lamp_dict.items():
+    globals()[n] = HueLamp(a, n)
 
 def get_key():
-    """Function to get keyboard key without enter."""
+    """function to get keyboard key without enter."""
 
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -25,15 +25,16 @@ def get_key():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return key
 
-def brightness_alter(*hl):
+def brightness_alter(hl):
 
     bri = 1
     already_send = "no"
     bri_sum = 0
 
     for lamp in hl:
-        print('The current brightness of lamp %s = %s.' % (colored(lamp.name, "yellow"), colored(lamp.brightness_get(), "green")))
-        bri_sum += lamp.brightness_get()
+        hl_obj = globals()[lamp]
+        print('The current brightness of lamp %s = %s.' % (colored(hl_obj.name, "yellow"), colored(hl_obj.brightness_get(), "green")))
+        bri_sum += hl_obj.brightness_get()
     print()
     bri = int(math.floor(bri_sum / len(hl)))
 
@@ -51,12 +52,14 @@ def brightness_alter(*hl):
                 print("%s = maximum brightness" % colored(bri, 'red'))
                 if already_send == "no":
                     for lamp in hl:
-                        lamp.brightness_set(bri)
+                        hl_obj = globals()[lamp]
+                        hl_obj.brightness_set(bri)
                     already_send = "yes"    
             else:
                 print(colored(bri, 'green'))
                 for lamp in hl:
-                    lamp.brightness_set(bri)
+                    hl_obj = globals()[lamp]
+                    hl_obj.brightness_set(bri)
                 already_send = "no"
                     
         elif key == "-":
@@ -66,12 +69,14 @@ def brightness_alter(*hl):
                 print("%s = minimum brightness" % colored(bri, 'red'))
                 if already_send == "no":
                     for lamp in hl:
-                        lamp.brightness_set(bri)
+                        hl_obj = globals()[lamp]
+                        hl_obj.brightness_set(bri)
                     already_send = "yes"    
             else:
                 print(colored(bri, 'green'))
                 for lamp in hl:
-                    lamp.brightness_set(bri)
+                    hl_obj = globals()[lamp]
+                    hl_obj.brightness_set(bri)
                 already_send = "no"
 
         elif key == "q":
@@ -82,31 +87,38 @@ def brightness_alter(*hl):
 
 print("\n######  Alter the lamp's brightness  ######\n")
 
-while True:
-    sel = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
-    print()
+s = "Where to send ? "
+for name in lamp_dict.values():
+    y = name[5:]
+    s = s + "%s " % y.replace(y[0], "(%s)" % y[0], 1)
+if len(lamp_dict) > 1:
+    s = s + "or (a)ll : "
+else:
+    s = s + " : "
 
-    if sel == 'k':
-        brightness_alter(hl_1)
+while True:
+    kbd_inp = input(s)
+    print()
+    first_letter_list = [y[5] for y in lamp_dict.values()]
+    if kbd_inp in first_letter_list:
+        k = [y for y in lamp_dict.values() if kbd_inp == y[5]]
+        brightness_alter(k)
         break
-    elif sel == 'kl' or sel == 'lk':
-        brightness_alter(hl_1, hl_2)
-        break
-    elif sel == 'l':
-        brightness_alter(hl_2)
-        break
-    elif sel == 'lh' or sel == 'hl':
-        brightness_alter(hl_2, hl_3)
-        break
-    elif sel == 'h':
-        brightness_alter(hl_3)
-        break
-    elif sel == 'hk' or sel == 'kh':
-        brightness_alter(hl_3, hl_1)
-        break
-    elif sel == 'a':
-        brightness_alter(hl_1, hl_2, hl_3)
+    elif kbd_inp == "a":
+        brightness_alter([y for y in lamp_dict.values()])
         break
     else:
-        print("Please just input k, l, h or a.\n")
+        s = "Please just input "
+        for name in lamp_dict.values():
+            s = s + "(%s) " % name[5]
+        if len(lamp_dict) > 1:
+            s = s + "or (a) : "
+        else:
+            s = s + " : "
+
+for lamp in lamp_dict.values():
+    hl_obj = globals()[lamp]
+
+    hl_obj.prop_chg_notify.kill()
+
 

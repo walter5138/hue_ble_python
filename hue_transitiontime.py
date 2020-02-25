@@ -2,18 +2,19 @@
 
 """Sets the the Hue Lamp(s) transitiontime form 0 to 4 miliseconds."""
 
-from hue_class import HueLamp
 from termcolor import colored
+from hue_class import HueLamp
+from hue_config import lamp_dict
 
-hl_1 = HueLamp("F6_0A_34_1A_BC_6F", "kitchen   ")
-hl_2 = HueLamp("EC_D6_5A_2D_93_CC", "livingroom")
-hl_3 = HueLamp("DF_CA_54_1B_39_A8", "homeoffice")
+for a, n in lamp_dict.items():
+    globals()[n] = HueLamp(a, n)
 
 print("\n######  Sets the the Hue Lamp(s) transitiontime form 0 to 4 miliseconds.  ######\n")
 
-print("Lamp %s has transitiontime %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.transitiontime_get(), 'green')))
-print("Lamp %s has transitiontime %s seconds." % (colored(hl_2.name, 'yellow'), colored(hl_2.transitiontime_get(), 'green')))
-print("Lamp %s has transitiontime %s seconds." % (colored(hl_3.name, 'yellow'), colored(hl_3.transitiontime_get(), 'green')))
+for lamp in lamp_dict.values():
+    hl_obj = globals()[lamp]
+    print("Lamp %s has transitiontime %s seconds." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.transitiontime_get(), 'green')))
+
 print()
 
 while True:
@@ -28,40 +29,40 @@ while True:
     except ValueError:
         print('"%s" is not a number. Try again.\n' % x)
 
+s = "Where to send ? "
+for name in lamp_dict.values():
+    y = name[5:]
+    s = s + "%s " % y.replace(y[0], "(%s)" % y[0], 1)
+if len(lamp_dict) > 1:
+    s = s + "or (a)ll : "
+else:
+    s = s + " : "
+
 while True:
-    sel = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
+    kbd_inp = input(s)
     print()
-    if sel == 'k':
-        hl_1.transitiontime_set(tra)
+    first_letter_list = [y[5] for y in lamp_dict.values()]
+    if kbd_inp in first_letter_list:
+        k = [y for y in lamp_dict.values() if kbd_inp == y[5]]
+        globals()[k[0]].transitiontime_set(tra)
         break
-    elif sel == 'kl' or sel == 'lk':
-        hl_1.transitiontime_set(tra)
-        hl_2.transitiontime_set(tra)
-        break
-    elif sel == 'l':
-        hl_2.transitiontime_set(tra)
-        break
-    elif sel == 'lh' or sel == 'hl':
-        hl_2.transitiontime_set(tra)
-        hl_3.transitiontime_set(tra)
-        break
-    elif sel == 'h':
-        hl_3.transitiontime_set(tra)
-        break
-    elif sel == 'hk' or sel == 'kh':
-        hl_3.transitiontime_set(tra)
-        hl_1.transitiontime_set(tra)
-        break
-    elif sel == 'a':
-        hl_1.transitiontime_set(tra)
-        hl_2.transitiontime_set(tra)
-        hl_3.transitiontime_set(tra)
+    elif kbd_inp == "a":
+        for lamp in lamp_dict.values():
+            globals()[lamp].transitiontime_set(tra)
         break
     else:
-        print("Please just input k, l, h or a.\n")
+        s = "Please just input "
+        for name in lamp_dict.values():
+            s = s + "(%s) " % name[5]
+        if len(lamp_dict) > 1:
+            s = s + "or (a) : "
+        else:
+            s = s + " : "
 
-print("Lamp %s has transitiontime %s seconds." % (colored(hl_1.name, 'yellow'), colored(hl_1.transitiontime_get(), 'green')))
-print("Lamp %s has transitiontime %s seconds." % (colored(hl_2.name, 'yellow'), colored(hl_2.transitiontime_get(), 'green')))
-print("Lamp %s has transitiontime %s seconds." % (colored(hl_3.name, 'yellow'), colored(hl_3.transitiontime_get(), 'green')))
+for lamp in lamp_dict.values():
+    hl_obj = globals()[lamp]
+    print("Lamp %s has transitiontime %s seconds." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.transitiontime_get(), 'green')))
+
+    hl_obj.prop_chg_notify.kill()
 
 print()

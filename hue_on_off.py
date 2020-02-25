@@ -2,29 +2,22 @@
 
 """Switches Hue Lamp(s) on or off."""
 
-from hue_class import HueLamp
 from termcolor import colored
+from hue_class import HueLamp
+from hue_config import lamp_dict
 
-hl_1 = HueLamp("F6_0A_34_1A_BC_6F", "kitchen   ")
-hl_2 = HueLamp("EC_D6_5A_2D_93_CC", "livingroom")
-hl_3 = HueLamp("DF_CA_54_1B_39_A8", "homeoffice")
+for a, n in lamp_dict.items():
+    globals()[n] = HueLamp(a, n)
 
 print("\n######  Switches Hue Lamp(s) on or off.  ######\n")
 
-if hl_1.on_off_state() == "on":
-    print("Lamp %s is %s." % (colored(hl_1.name, 'yellow'), colored(hl_1.on_off_state(), 'green')))
-elif hl_1.on_off_state() == "off":
-    print("Lamp %s is %s." % (colored(hl_1.name, 'yellow'), colored(hl_1.on_off_state(), 'red')))
+for lamp in lamp_dict.values():
+    hl_obj = globals()[lamp]
+    if hl_obj.on_off_state() == "on":
+        print("%s is %s." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.on_off_state(), 'green')))
+    elif hl_obj.on_off_state() == "off":
+        print("%s is %s." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.on_off_state(), 'red')))
 
-if hl_2.on_off_state() == "on":
-    print("Lamp %s is %s." % (colored(hl_2.name, 'yellow'), colored(hl_2.on_off_state(), 'green')))
-elif hl_2.on_off_state() == "off":
-    print("Lamp %s is %s." % (colored(hl_2.name, 'yellow'), colored(hl_2.on_off_state(), 'red')))
-
-if hl_3.on_off_state() == "on":
-    print("Lamp %s is %s." % (colored(hl_3.name, 'yellow'), colored(hl_3.on_off_state(), 'green')))
-elif hl_3.on_off_state() == "off":
-    print("Lamp %s is %s." % (colored(hl_3.name, 'yellow'), colored(hl_3.on_off_state(), 'red')))
 print()
     
 while True:
@@ -39,51 +32,51 @@ while True:
     else:
         print("Please just input on or off.\n")
 
+# create a dynamic string:
+s = "Where to send ? "
+for name in lamp_dict.values():
+    y = name[5:]
+    s = s + "%s " % y.replace(y[0], "(%s)" % y[0], 1)
+if len(lamp_dict) > 1:
+    s = s + "or (a)ll : "
+else:
+    s = s + " : "
+
 while True:
-    x = input("Where to send: (k)itchen, (l)ivingroom, (h)omeoffice or (a)ll : ")
+    kbd_inp = input(s)
     print()
-    if x == 'k':
-        hl_1.on_off_switch(switch)
+    first_letter_list = [y[5] for y in lamp_dict.values()]
+    if kbd_inp in first_letter_list:
+        k = [y for y in lamp_dict.values() if kbd_inp == y[5]]
+        globals()[k[0]].on_off_switch(switch)
         break
-    elif x == 'kl' or x == 'lk':
-        hl_1.on_off_switch(switch)
-        hl_2.on_off_switch(switch)
-        break
-    elif x == 'l':
-        hl_2.on_off_switch(switch)
-        break
-    elif x == 'lh' or x == 'hl':
-        hl_2.on_off_switch(switch)
-        hl_3.on_off_switch(switch)
-        break
-    elif x == 'h':
-        hl_3.on_off_switch(switch)
-        break
-    elif x == 'hk' or x == 'kh':
-        hl_3.on_off_switch(switch)
-        hl_1.on_off_switch(switch)
-        break
-    elif x == 'a':
-        hl_1.on_off_switch(switch)
-        hl_2.on_off_switch(switch)
-        hl_3.on_off_switch(switch)
+    elif kbd_inp == "a":
+        for lamp in lamp_dict.values():
+            globals()[lamp].on_off_switch(switch)
         break
     else:
-        print("Please just input k, l, h or a.\n")
+        s = "Please just input "
+        for name in lamp_dict.values():
+            s = s + "(%s) " % name[5]
+        if len(lamp_dict) > 1:
+            s = s + "or (a) : "
+        else:
+            s = s + " : "
 
-if hl_1.on_off_state() == "on":
-    print("Lamp %s is %s." % (colored(hl_1.name, 'yellow'), colored(hl_1.on_off_state(), 'green')))
-elif hl_1.on_off_state() == "off":
-    print("Lamp %s is %s." % (colored(hl_1.name, 'yellow'), colored(hl_1.on_off_state(), 'red')))
+for lamp in lamp_dict.values():
+    hl_obj = globals()[lamp]
+    if hl_obj.on_off_state() == "on":
+        print("%s is %s." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.on_off_state(), 'green')))
+    elif hl_obj.on_off_state() == "off":
+        print("%s is %s." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.on_off_state(), 'red')))
 
-if hl_2.on_off_state() == "on":
-    print("Lamp %s is %s." % (colored(hl_2.name, 'yellow'), colored(hl_2.on_off_state(), 'green')))
-elif hl_2.on_off_state() == "off":
-    print("Lamp %s is %s." % (colored(hl_2.name, 'yellow'), colored(hl_2.on_off_state(), 'red')))
+    hl_obj.prop_chg_notify.kill()
 
-if hl_3.on_off_state() == "on":
-    print("Lamp %s is %s." % (colored(hl_3.name, 'yellow'), colored(hl_3.on_off_state(), 'green')))
-elif hl_3.on_off_state() == "off":
-    print("Lamp %s is %s." % (colored(hl_3.name, 'yellow'), colored(hl_3.on_off_state(), 'red')))
-    
 print()
+
+
+
+
+
+
+
