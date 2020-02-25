@@ -39,6 +39,8 @@ Following prerequisites are required:
 
 3. The Linux bluetooth-stack Bluez build with Dbus
 
+3,5. Notification daemon running (temporarily for testing and learning)
+
 4. 3 Philips Hue Bluetooth color and white light bulbs ( LCA001 )
    If you have more or less than 3 Bulbs you have to alter some scripts
    at the moment. See TODO.
@@ -82,6 +84,6 @@ Reduces the response time for the dbus-send commands.
 
 TODO
 
-- Alter using different number of bulbs.
+- Alter using different number of bulbs. [DONE]
 - Connecting the bulbs in a better way.
 - Automate pairing 
