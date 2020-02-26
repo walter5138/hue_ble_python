@@ -2,6 +2,7 @@
 
 """Sets the mired of the Hue Lamp(s)."""
 
+#from time import sleep
 from termcolor import colored
 from hue_class import HueLamp
 from hue_config import lamp_dict
@@ -62,7 +63,7 @@ while True:
 
 for lamp in lamp_dict.values():
     hl_obj = globals()[lamp]
-    print("Lamp %s has mired %s." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.mired_get(), 'green')))
+    print("Lamp %s got mired %s in %s seconds." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.mired_get(), 'green'),  colored(hl_obj.transitiontime_get(), 'green')))
 
     hl_obj.prop_chg_notify.kill()
 
