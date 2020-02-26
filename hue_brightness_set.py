@@ -46,7 +46,6 @@ while True:
     if kbd_inp in first_letter_list:
         k = [y for y in lamp_dict.values() if kbd_inp == y[5]]
         globals()[k[0]].brightness_set(bri)
-        #print("Lamp %s got mired %s in %s seconds." % (colored(hl_obj.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
         break
     elif kbd_inp == "a":
         for lamp in lamp_dict.values():
@@ -65,7 +64,7 @@ while True:
 
 for lamp in lamp_dict.values():
     hl_obj = globals()[lamp]
-    print("Lamp %s has brightness %s." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.brightness_get(), 'green')))
+    print("Lamp %s got brightness %s in %s seconds." % (colored(hl_obj.name, 'yellow'), colored(hl_obj.brightness_get(), 'green'),  colored(hl_obj.transitiontime_get(), 'green')))
 
     hl_obj.prop_chg_notify.kill()
 
