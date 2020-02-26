@@ -38,7 +38,7 @@ while it < 10:
 
         pos += 1
 
-        sleep(0.5)
+        sleep(0.2)
 
     it += 1
 
@@ -46,4 +46,10 @@ for lamp in lamp_dict.values():
     hl_obj = globals()[lamp]
     hl_obj.prop_chg_notify.kill()
 
-print("\nHow to send these values the right way?\nWhat are these values representing?\nAre those values hue and saturation or\nyx values in gamut b?\nWhat data structure is behind it?\n")
+print("""
+How to send these values the right way?
+What are these values representing?
+Are those values hue and saturation or
+yx values in gamut b?
+What data structure is behind it?
+""")
