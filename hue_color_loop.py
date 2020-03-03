@@ -38,7 +38,7 @@ while it < 10:
 
         pos += 1
 
-        sleep(0.2)
+        sleep(0.4)
 
     it += 1
 
