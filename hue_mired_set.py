@@ -2,7 +2,7 @@
 
 """Sets the mired of the Hue Lamp(s)."""
 
-#from time import sleep
+from time import sleep
 from termcolor import colored
 from hue_class import HueLamp
 from hue_config import lamp_dict
@@ -46,7 +46,6 @@ while True:
     if kbd_inp in first_letter_list:
         k = [y for y in lamp_dict.values() if kbd_inp == y[5]]
         globals()[k[0]].mired_set(mir)
-        #print("Lamp %s got mired %s in %s seconds." % (colored(hl_obj.name, 'yellow'), colored(hl_1.mired_get(), 'green'),  colored(hl_1.transitiontime_get(), 'green')))
         break
     elif kbd_inp == "a":
         for lamp in lamp_dict.values():
@@ -60,6 +59,9 @@ while True:
             s = s + "or (a) : "
         else:
             s = s + " : "
+
+# if transitiontime is long valuess needs time to settle
+sleep(0.4)
 
 for lamp in lamp_dict.values():
     hl_obj = globals()[lamp]
