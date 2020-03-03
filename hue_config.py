@@ -1,11 +1,25 @@
 #!/usr/bin/env python3
 
-lamp_kitchen = "F6_0A_34_1A_BC_6F"
-lamp_livingroom = "EC_D6_5A_2D_93_CC"
-lamp_homeoffice = "DF_CA_54_1B_39_A8"
+import dbus
 
-lamp_addresses = [lamp_kitchen, lamp_livingroom, lamp_homeoffice]
+systembus = dbus.SystemBus()
 
-lamp_dict = {'F6_0A_34_1A_BC_6F': 'lamp_kitchen', 'EC_D6_5A_2D_93_CC': 'lamp_livingroom', 'DF_CA_54_1B_39_A8': 'lamp_homeoffice'}
-#lamp_dict = {'F6_0A_34_1A_BC_6F': 'lamp_kitchen', 'DF_CA_54_1B_39_A8': 'lamp_homeoffice'}
-#lamp_dict = {'F6_0A_34_1A_BC_6F': 'lamp_kitchen'}
+o_manager = dbus.Interface(systembus.get_object('org.bluez', '/'), 'org.freedesktop.DBus.ObjectManager') 
+m_objects = o_manager.GetManagedObjects()
+
+lamp_dict = {}
+
+for obj_paths, obj_dict in m_objects.items():
+    if "org.bluez.Device1" in obj_dict:
+        for interface, properties in obj_dict.items():
+            if "Hue Lamp" in properties.values():
+                for property, value in properties.items():
+                    if property == "Address":
+                        v = str(value)
+                        x = v.replace(":", "_")
+                    if property == "Alias":
+                        y = str(value)
+                lamp_dict[x] = y 
+
+print(lamp_dict)
+lamp_dict
