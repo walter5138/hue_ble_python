@@ -14,23 +14,15 @@ def prop_chg_notify(address, name):
     systembus = dbus.SystemBus()
     sessionbus = dbus.SessionBus()
 
-    destination = ('org.bluez')
-    interface = ('org.freedesktop.DBus.Properties')
-    objectpath = ('/org/bluez/hci0/dev_'+ address)
-    object = systembus.get_object(destination, objectpath)
-    my_receiver = dbus.Interface(object, interface)
+    properties_proxy = dbus.Interface(systembus.get_object('org.bluez', '/org/bluez/hci0/dev_'+ address), 'org.freedesktop.DBus.Properties')
+    notification_proxy = dbus.Interface(sessionbus.get_object('org.freedesktop.Notifications', '/org/freedesktop/Notifications'), 'org.freedesktop.Notifications')
 
     def handler(interface, changed_properties, invalidated_properties):
-        dest = ('org.freedesktop.Notifications')
-        obj_p = ('/org/freedesktop/Notifications')
-        inter_f = ('org.freedesktop.Notifications')
-        obj = sessionbus.get_object(dest, obj_p)
-        notification = dbus.Interface(obj, inter_f)
         for p in changed_properties:
-            #print("%s : %s" % (p, changed_properties[p]))
-            notification.Notify("prop_changed", 0, "", "Props %s changed!" % name, "%s = %s" % (str(p), bool(changed_properties[p])), "", {}, 2000)
+            print("%s : %s" % (p, changed_properties[p]))
+            notification_proxy.Notify("prop_changed", 0, "", "Props %s changed!" % name, "%s = %s" % (str(p), bool(changed_properties[p])), "", {}, 2000)
 
-    my_receiver.connect_to_signal("PropertiesChanged", handler)
+    properties_proxy.connect_to_signal("PropertiesChanged", handler)
 
     loop.run()
 
