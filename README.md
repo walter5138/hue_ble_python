@@ -5,12 +5,17 @@ Project controlling Philips Hue Bluetooth color and white bulbs using:
 - Bluez
 - Dbus
 - Python 
+- dbus-python
 - Philips Hue Bluetooth color and white bulbs ( LCA001 tested),
   and with all other Philips Hue lamps with the same characteristics.
 
 It is a learning project and there are many improvementes to make,
 But you can:
-- connect the bulbs
+- search for new Bulbs
+- auto pair
+- auto trust
+- set an Bluez alias
+- auto connect the bulbs
 - switch the bulbs on and off
 - set the ac_on_state
 - set, increase/decrease brightness
@@ -19,13 +24,10 @@ But you can:
 - have different color loops
 - change transition time
 - alarm funktion: ping or blink  
-- set the bulb name
-
-It demonstrates what the characteristics do.
-Aware of that you can use them in your own projects.
+- set the bulb name (stored in the Bulb)
 
 This project is in daily development.
-Therefore it is not granted to work for everybody.
+Therefore it is not granted to work any time.
 
 If you are just interested in what the characteristics do
 watch the class HueLamp in the file hue_class.py.
@@ -35,37 +37,37 @@ Following prerequisites are required:
 
 1. A running Linux system.
 
-2. Dbus running with system bus
+2. Dbus running with system bus and session bus.
 
-3. The Linux bluetooth-stack Bluez build with Dbus
+3. The Linux bluetooth-stack Bluez build with Dbus.o
 
-3,5. Notification daemon running (temporarily for testing and learning)
+4. Python with dbus-python.
 
-4. 3 Philips Hue Bluetooth color and white light bulbs ( LCA001 )
-   If you have more or less than 3 Bulbs you have to alter some scripts
-   at the moment. See TODO.
+4.5. Notification daemon running (temporarily for testing and learning)
 
+5. Philips Hue Bluetooth color and white light bulbs ( LCA001 ).
+   Tested with 1, 2 and 3 Bulbs.
 
-Get it working:
 
 Once the prerequisites are in place you need to:
 
-Use bluetoothctl to pair and connect the bulbs:
-- go to a terminal
-- at the prompt input bluetoothctl
-- check if the Bluetoothcontroller is available: list
-- power on the bluetoothcontroller: power on 
-  If you want the bluetoothcontroller to be powered on as soon it's available (while boot)
-  go to /etc/bluetooth/main.conf and uncomment "AutoEnable=true" at the bottom of the file
-- make the controller pairable: pairable on
-- scan for new devices: scan on
-- pair the bulb with the address: pair XX:XX:XX:XX:XX:XX
-- trust the bulb: trust XX:XX:XX:XX:XX:XX
+Go to the Project folder ...../hue
+Install your lamps, make shure they're powered AC/ON (wall switch),
+if so they are shining in a warm white color.
+Start with hue_discover_pair_trust_alias.py
+All Bulbs are discovered, paired, and trusted automatically.
+And you are requested to input an Alias for the lamp which is
+blinking fore that time. Setting an Alias is essential!
+The further programm(s) depend on that.
+Done that you are ready to roll.
+For the moment use the programms one by one, ./hue_brightness_set.py,
+for example.
+ 
 
 Have fun controlling the bulbs: ./hue_...
 
 
-Tuning
+TUNING
 
 Append to /var/lib/bluetooth/"adapter_id"/"hue_bulb_id"/info :
  
@@ -85,5 +87,14 @@ Reduces the response time for the dbus-send commands.
 TODO
 
 - Alter using different number of bulbs. [DONE]
-- Connecting the bulbs in a better way.
-- Automate pairing 
+- Automate discovering, pairing, trusting  [DONE]
+- Connecting the bulbs in a better way, reconnect via ... ?
+- collect it all in a shiny cli
+
+
+QUESTION
+
+Could anyone help with sending the color values the right way ???
+See hue_color_loop.py and hue_color_set.py.
+
+
