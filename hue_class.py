@@ -7,10 +7,10 @@ class HueLamp:
         import time
         import subprocess
         self.address = address
-        self.prop_chg_notify = subprocess.Popen(["./hue_sig_res.py", self.address, name])
+        self.prop_chg_notify = subprocess.Popen(["./hue_props_dev_chg_notify.py", self.address, name])
         print("subprocess %s pid is %s" % (self.prop_chg_notify.args, self.prop_chg_notify.pid))
         self.connect()
-        time.sleep(3)
+        time.sleep(1)
         self.name_set(name)
         self.name = self.name_get()
         print('%s = %s, connection state: %s' % (self.address, self.name, self.connection_state()))
