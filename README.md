@@ -3,7 +3,7 @@ Project controlling Philips Hue Bluetooth color and white bulbs. Python version.
 
 Project controlling Philips Hue Bluetooth color and white bulbs using:
 - Bluez
-- Dbus
+- DBus
 - Python 
 - dbus-python
 - Philips Hue Bluetooth color and white bulbs ( LCA001 tested),
@@ -27,7 +27,7 @@ But you can:
 - set the bulb name (stored in the Bulb)
 
 This project is in daily development.
-Therefore it is not granted to work any time.
+Therefore it is not granted to work at any time.
 
 If you are just interested in what the characteristics do
 watch the class HueLamp in the file hue_class.py.
@@ -37,9 +37,9 @@ Following prerequisites are required:
 
 1. A running Linux system.
 
-2. Dbus running with system bus and session bus.
+2. DBus running with system bus and session bus.
 
-3. The Linux bluetooth-stack Bluez build with Dbus.o
+3. The Linux bluetooth-stack Bluez build with DBus.
 
 4. Python with dbus-python.
 
@@ -51,10 +51,10 @@ Following prerequisites are required:
 
 Once the prerequisites are in place you need to:
 
-Go to the Project folder ...../hue
+Go to the Project folder ...../hue.
 Install your lamps, make shure they're powered AC/ON (wall switch),
 if so they are shining in a warm white color.
-Start with hue_discover_pair_trust_alias.py
+Start with hue_discover_pair_trust_alias.py.
 All Bulbs are discovered, paired, and trusted automatically.
 And you are requested to input an Alias for the lamp which is
 blinking fore that time. Setting an Alias is essential!
