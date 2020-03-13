@@ -21,5 +21,4 @@ for obj_paths, obj_dict in m_objects.items():
                         y = str(value)
                 lamp_dict[x] = y 
 
-#print(lamp_dict)
 lamp_dict
