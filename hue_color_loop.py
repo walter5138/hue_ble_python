@@ -34,7 +34,7 @@ while it < 10:
             hl_obj = globals()[lamp]
             hl_obj.color_set(color)
         
-            print("%s got translated in the bulb in %s!" % (colored(color, 'green'), colored(hl_obj.color_get(), 'green')))
+            print("%s got translated in the bulb to %s!" % (colored(color, 'green'), colored(hl_obj.color_get(), 'green')))
 
         pos += 1
 
