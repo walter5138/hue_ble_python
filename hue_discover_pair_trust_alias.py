@@ -13,7 +13,7 @@ loop = GLib.MainLoop()
 systembus = dbus.SystemBus()
 sessionbus = dbus.SessionBus()
 
-scantime = 90 
+scantime = 60 
 
 print()
 
@@ -23,20 +23,31 @@ def interfaces_added(object, interfaces):
     print("\twith interfaces : ")
     for interface, properties in interfaces.items():
         print("\t\t%s" % interface)
-        for key, value in properties.items():
-            if "ManufacturerData" in key:
-                if key == "ManufacturerData":
+        for prop, value in properties.items():
+            if "ManufacturerData" in prop:
+                if prop == "ManufacturerData":
                     for md_key, md_val_arr in value.items():
-                        print("\t\t\t%s = %s : %s" % (key, md_key, [int(md_val) for md_val in md_val_arr]))
-            elif "ServiceData" in key:
-                if key == "ServiceData":
+                        print("\t\t\t%s = %s : %s" % (prop, md_key, [int(md_val) for md_val in md_val_arr]))
+            elif "ServiceData" in prop:
+                if prop == "ServiceData":
                     for sd_key, sd_val_arr in value.items():
-                        print("\t\t\t%s = %s : %s" % (key, sd_key, [int(sd_val) for sd_val in sd_val_arr]))
-            elif "UUIDs" in key:
-                if key == "UUIDs":
-                    print("\t\t\t%s = %s" % (key, [str(UUID) for UUID in value]))
+                        print("\t\t\t%s = %s : %s" % (prop, sd_key, [int(sd_val) for sd_val in sd_val_arr]))
+            elif "UUIDs" in prop:
+                if prop == "UUIDs":
+                    print("\t\t\t%s = " % prop)
+                    for UUID in value:
+                        print("\t\t\t\t%s" % UUID)
+            elif "Value" in prop:
+                if prop == "Value":
+                    print("\t\t\t%s = %s" % (prop, [int(Value) for Value in value]))
+            elif "Flags" in prop:
+                if prop == "Flags":
+                    print("\t\t\t%s = %s" % (prop, [str(Flag) for Flag in value]))
+            elif "Includes" in prop:
+                if prop == "Includes":
+                    print("\t\t\t%s = %s" % (prop, [str(Includes) for Includes in value]))
             else:
-                print("\t\t\t%s = %s" % (key, value))
+                print("\t\t\t%s = %s" % (prop, value))
     print()
     
 def interfaces_removed(object, interfaces):
@@ -51,23 +62,26 @@ def notify_adapter1(switch):
     global prop_chg_notify
     if switch == "start":
         prop_chg_notify = subprocess.Popen(["./hue_props_ad1_chg_notify.py"])
-        #print("adapter1 notification started : %s pid %s" % (prop_chg_notify.args, prop_chg_notify.pid))
+        print("adapter1 notification started : %s pid %s" % (prop_chg_notify.args, prop_chg_notify.pid))
     if switch == "stop":
-        #print("adapter1 notification stopped : pid %s" % prop_chg_notify.pid)
+        print("adapter1 notification stopped : pid %s" % prop_chg_notify.pid)
         prop_chg_notify.kill()
-    #print()
+    print()
+    sleep(1)
 
 def notify_lamps(switch, address):
     pass
 
 def discovery(switch):
+    adapter1_proxy = dbus.Interface(systembus.get_object('org.bluez', '/org/bluez/hci0'), 'org.bluez.Adapter1')
     if switch == "start":
         adapter1_proxy.StartDiscovery()
-        #print("Discovery started!")
+        print("Discovery started!")
     if switch == "stop":
         adapter1_proxy.StopDiscovery()
-        #print("Discovery stoped!")
-    #print()
+        print("Discovery stoped!")
+    print()
+    sleep(1)
 
 def set_scantime(sec):
     GLib.timeout_add_seconds(sec, quit)
@@ -110,15 +124,13 @@ def new_huelamp_pair_trust(new_huelamp_addresses):
 
 def new_huelamp_alias(new_huelamp_addresses):
     for new_huelamp_address in new_huelamp_addresses:
-        ping_handle = dbus.Interface(systembus.get_object('org.bluez', "/org/bluez/hci0/dev_" + new_huelamp_address + "/service0023/char0032"), 'org.bluez.GattCharacteristic1')
-        ping_handle.WriteValue([2], [])
+        blink_handle = dbus.Interface(systembus.get_object('org.bluez', "/org/bluez/hci0/dev_" + new_huelamp_address + "/service0023/char0032"), 'org.bluez.GattCharacteristic1')
+        blink_handle.WriteValue([2], [])
         properties_lamp = dbus.Interface(systembus.get_object('org.bluez', '/org/bluez/hci0/dev_' + new_huelamp_address), 'org.freedesktop.DBus.Properties')
-        name = input("Please input an alias for blinking lamp : ")
+        name = input("Please input an alias for the blinking lamp : ")
         print()
         properties_lamp.Set("org.bluez.Device1", "Alias", "lamp_" + name)
     print()
-
-adapter1_proxy = dbus.Interface(systembus.get_object('org.bluez', '/org/bluez/hci0'), 'org.bluez.Adapter1')
 
 systembus.add_signal_receiver(interfaces_added,
                                 dbus_interface = "org.freedesktop.DBus.ObjectManager",
@@ -129,7 +141,6 @@ systembus.add_signal_receiver(interfaces_removed,
                                 signal_name = "InterfacesRemoved")
 
 notify_adapter1("start")
-sleep(1)
 discovery("start")
 
 set_scantime(scantime)
